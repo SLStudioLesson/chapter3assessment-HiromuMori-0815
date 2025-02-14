@@ -83,21 +83,25 @@ public class RecipeUI {
         }
     }
 
+    // 設問6
+    // レシピ名や材料をここで入力する
     private void addNewRecipe() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
             ArrayList<Ingredient> ingredients = new ArrayList<>();
             System.out.println("Adding a new recipe.");
             System.out.print("Enter recipe name: ");
             String recipeName = reader.readLine();
 
-            System.out.print("Enter ingredients (type 'done' when finished): ");
+            System.out.println("Enter ingredients (type 'done' when finished): ");
             while (true) {
                 System.out.print("Ingredient: ");
                 String ingredientName = reader.readLine();
                 if (ingredientName.equals("done")) {
-                    dataHandler.writeData(ingredients);
+                    Recipe recipe = new Recipe(recipeName, ingredients);
+                    dataHandler.writeData(recipe);
+                    break;
                 } else {
-                    ingredients.add(ingredientName);
+                    ingredients.add(new Ingredient(ingredientName));
                 }
             }
         } catch (IOException e) {

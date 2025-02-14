@@ -3,10 +3,12 @@ package com.recipeapp.datahandler;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import com.recipeapp.model.Ingredient;
 import com.recipeapp.model.Recipe;
 
 public class CSVDataHandler implements DataHandler {
@@ -39,10 +41,21 @@ public class CSVDataHandler implements DataHandler {
     }
 
     // 設問6
-    // ユーザーの側から入力してそれをファイルに書き込む。
+    // ユーザーの側から入力してしたものをここで受け取ってファイルに追加で書き込む。
     @Override
     public void writeData(Recipe recipe) throws IOException {
-
+        BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
+        String writing = recipe.getName() + ", ";
+        ArrayList<Ingredient> ingredients = recipe.getIngredients();
+        for (int i = 0; i < ingredients.size(); i++) {
+            writing += ingredients.get(i).getName();
+            if (i < ingredients.size() - 1) {
+                writing += ", ";
+            }
+        }
+        writer.write(writing);
+        writer.newLine();
+        writer.close();
         System.out.println("Recipe added successfully.");
     }
 
