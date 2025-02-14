@@ -14,7 +14,21 @@ public class App {
             System.out.println("2. JSON");
             System.out.print("Select (1/2): ");
             String choice = reader.readLine();
-            
+
+            // 1を選択した場合と2を選択した場合、それ以外を選択した場合に分けてインスタンスをし、その後にUIのdisplayMenuメソッドにわたるようにする。
+            DataHandler dataHandler;
+            switch (choice) {
+                case "1":
+                    dataHandler = new CSVDataHandler();
+                    break;
+                case "2":
+                    dataHandler = new JSONDataHandler();
+                    break;
+                default:
+                    dataHandler = new CSVDataHandler();
+            }
+            RecipeUI recipeUI = new RecipeUI(dataHandler);
+            recipeUI.displayMenu();
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());

@@ -1,6 +1,13 @@
 package com.recipeapp.ui;
 
+import com.recipeapp.datahandler.DataHandler;
+import com.recipeapp.datahandler.CSVDataHandler;
+import com.recipeapp.datahandler.JSONDataHandler;
+import com.recipeapp.model.Ingredient;
+import com.recipeapp.model.Recipe;
+
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -14,7 +21,7 @@ public class RecipeUI {
         reader = new BufferedReader(new InputStreamReader(System.in));
         this.dataHandler = dataHandler;
     }
-    
+
     public void displayMenu() {
 
         System.out.println("Current mode: " + dataHandler.getMode());
@@ -33,8 +40,10 @@ public class RecipeUI {
 
                 switch (choice) {
                     case "1":
+                        displayRecipes();
                         break;
                     case "2":
+                        addNewRecipe();
                         break;
                     case "3":
                         break;
@@ -48,6 +57,51 @@ public class RecipeUI {
             } catch (IOException e) {
                 System.out.println("Error reading input from user: " + e.getMessage());
             }
+        }
+    }
+
+    // 設問5
+    // CSVDataHandlerから送られたデータを整形してコンソールに表示する
+    private void displayRecipes() {
+        try {
+            ArrayList<Recipe> recipes = dataHandler.readData();
+            if (recipes.isEmpty()) {
+                System.out.println("No recipes available.");
+                return;
+            }
+            System.out.println("Recipes: ");
+            for (Recipe menu : recipes) {
+                String[] recipe = menu.toString().split(",", 2);
+                if (recipe.length == 2) {
+                    System.out.println("-------------------------------------");
+                    System.out.println("Rcipe Name: " + recipe[0]);
+                    System.out.println("Main Ingredients: " + recipe[1]);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+    }
+
+    private void addNewRecipe() {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            ArrayList<Ingredient> ingredients = new ArrayList<>();
+            System.out.println("Adding a new recipe.");
+            System.out.print("Enter recipe name: ");
+            String recipeName = reader.readLine();
+
+            System.out.print("Enter ingredients (type 'done' when finished): ");
+            while (true) {
+                System.out.print("Ingredient: ");
+                String ingredientName = reader.readLine();
+                if (ingredientName.equals("done")) {
+                    dataHandler.writeData(ingredients);
+                } else {
+                    ingredients.add(ingredientName);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Failed to add new recipe: " + e.getMessage());
         }
     }
 }
