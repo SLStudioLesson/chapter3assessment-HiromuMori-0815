@@ -35,7 +35,16 @@ public class CSVDataHandler implements DataHandler {
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
         String line;
         while ((line = reader.readLine()) != null) {
-            recipes.add(new Recipe(line, new ArrayList<>()));
+            String[] recipe = line.split(",", 2);
+            if (recipe.length == 2) {
+                String recipeName = recipe[0];
+                String[] ingredientNames = recipe[1].split(",");
+                ArrayList<Ingredient> ingredients = new ArrayList<>();
+                for (String ingredient : ingredientNames) {
+                    ingredients.add(new Ingredient(ingredient.trim()));
+                }
+                recipes.add(new Recipe(recipeName, ingredients));
+            }
         }
         return recipes;
     }

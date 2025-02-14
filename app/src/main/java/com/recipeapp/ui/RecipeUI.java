@@ -71,12 +71,19 @@ public class RecipeUI {
             }
             System.out.println("Recipes: ");
             for (Recipe menu : recipes) {
-                String[] recipe = menu.toString().split(",", 2);
-                if (recipe.length == 2) {
-                    System.out.println("-------------------------------------");
-                    System.out.println("Rcipe Name: " + recipe[0]);
-                    System.out.println("Main Ingredients: " + recipe[1]);
+                String recipeName = menu.getName();
+                ArrayList<Ingredient> ingredients = menu.getIngredients();
+                String ingredientName = "";
+                for (Ingredient ingredient : ingredients) {
+                    ingredientName += ingredient.getName() + ", ";
                 }
+
+                if (!ingredientName.isEmpty()) {
+                    ingredientName = ingredientName.substring(0, ingredientName.length() - 2);
+                }
+                System.out.println("-------------------------------------");
+                System.out.println("Recipe Name: " + recipeName);
+                System.out.println("Main Ingredients: " + ingredientName);
             }
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
